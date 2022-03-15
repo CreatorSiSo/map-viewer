@@ -10,7 +10,7 @@
     <div class="ZoomContainer">
       <img
         class="MapImage"
-        src="/assets/logo.svg"
+        :src="mapURI"
         alt=""
         :style="{
           transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`,
@@ -18,15 +18,26 @@
       />
     </div>
   </div>
+  <MapOverlay />
 </template>
 
 <script>
 import { ref, computed } from "vue";
 import { clamp } from "../composables/math.js";
 import { usePointer } from "../composables/pointer.js";
+import MapOverlay from "./MapOverlay.vue";
 
 export default {
-  setup() {
+  props: {
+    maxZoom: { type: Number, default: 6 },
+    minZoom: { type: Number, default: 0.6 },
+    zoomSpeed: { type: Number, default: 0.0015 },
+    mapURI: { type: String, default: "/assets/MapAzura.png" },
+  },
+  components: {
+    MapOverlay,
+  },
+  setup(props) {
     const { pressed } = usePointer();
     const cursorStyle = computed(() =>
       pressed.value === 0 ? "grabbing" : "grab"
@@ -41,13 +52,16 @@ export default {
       }
     };
 
+    const log = (...args) => console.log(args);
+
     const zoom = ref(1);
-    const updateZoom = (wheelEvent) => {
-      zoom.value += wheelEvent.wheelDelta * 0.001;
-      zoom.value = clamp(zoom.value, 0.5, 5);
+    const updateZoom = (wheelEvent, amount) => {
+      zoom.value += wheelEvent.wheelDelta * props.zoomSpeed;
+      zoom.value = clamp(zoom.value, props.minZoom, props.maxZoom);
     };
 
     return {
+      log,
       cursorStyle,
       zoom,
       updateZoom,
@@ -55,6 +69,7 @@ export default {
       updatePosition,
     };
   },
+  components: { MapOverlay },
 };
 </script>
 
@@ -71,7 +86,6 @@ export default {
   min-height: inherit;
   min-width: inherit;
   transform-origin: center center;
-  outline: 1px dashed green;
 }
 
 .ZoomContainer > .MapImage {
@@ -79,6 +93,5 @@ export default {
   width: auto;
   transform-origin: center center;
   margin: auto;
-  outline: 1px solid red;
 }
 </style>

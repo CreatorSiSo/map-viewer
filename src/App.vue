@@ -1,15 +1,19 @@
-<script setup>
-import "./styles/global.css";
-import MapContainer from "./components/MapContainer.vue";
-</script>
-
 <template>
   <main class="main">
-    <!-- <div id="MapOverlay">Overlay</div> -->
-
     <MapContainer />
   </main>
 </template>
+
+<script>
+import "./styles/global.css";
+import MapContainer from "./components/MapContainer.vue";
+
+export default {
+  components: {
+    MapContainer,
+  },
+};
+</script>
 
 <style scoped>
 .main {
@@ -19,10 +23,5 @@ import MapContainer from "./components/MapContainer.vue";
   max-width: 100vw;
   min-height: 100vh;
   max-height: 100vh;
-}
-
-#MapOverlay {
-  position: absolute;
-  inset: 0;
 }
 </style>
