@@ -55,7 +55,7 @@ export default {
     const log = (...args) => console.log(args);
 
     const zoom = ref(1);
-    const updateZoom = (wheelEvent, amount) => {
+    const updateZoom = (wheelEvent) => {
       zoom.value += wheelEvent.wheelDelta * props.zoomSpeed;
       zoom.value = clamp(zoom.value, props.minZoom, props.maxZoom);
     };

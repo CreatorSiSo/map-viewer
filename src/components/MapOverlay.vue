@@ -15,6 +15,7 @@
   position: absolute;
   min-width: inherit;
   min-height: inherit;
+  pointer-events: none;
 }
 
 .ZoomButtonsContainer {
@@ -33,7 +34,7 @@
   text-align: end;
   cursor: pointer;
   border: none;
-  /* border-radius: 0 1rem 1rem 0; */
+  pointer-events: all;
 
   font-size: 3rem;
   font-weight: 900;
