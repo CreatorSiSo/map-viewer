@@ -2,7 +2,7 @@ function throttle(callback, wait, immediate = false) {
   let timeout = null;
   let initialCall = true;
 
-  return function () {
+  return () => {
     const callNow = immediate && initialCall;
     const next = () => {
       callback.apply(this, arguments);
