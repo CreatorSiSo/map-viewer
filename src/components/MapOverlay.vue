@@ -1,13 +1,17 @@
 <template>
-  <div class="MapOverlay" @click="$emit('zoom', -1)">
+  <div class="MapOverlay">
     <div class="ZoomButtonsContainer">
-      <button @click="$emit('zoom', 1)" class="ZoomButton Plus">P</button>
-      <button @click="$emit('zoom', -1)" class="ZoomButton Minus">M</button>
+      <button @click="mapStore.zoomBy(0.5)" class="ZoomButton Plus">P</button>
+      <button @click="mapStore.zoomBy(-0.5)" class="ZoomButton Minus">M</button>
     </div>
   </div>
 </template>
 
-<script></script>
+<script setup>
+import { useMap } from "../stores/map.js";
+
+const mapStore = useMap();
+</script>
 
 <style scoped>
 .MapOverlay {

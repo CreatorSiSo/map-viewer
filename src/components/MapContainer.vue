@@ -13,43 +13,24 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { usePointer } from "../composables/pointer.js";
 import MapOverlay from "./MapOverlay.vue";
 
-import { throttle } from "../functions/throttle.js";
-import { clamp } from "../functions/math.js";
 import { useMap } from "../stores/map.js";
-
-const props = defineProps({
-  minZoom: {
-    type: Number,
-    default: 0.6,
-  },
-  maxZoom: {
-    type: Number,
-    default: 6,
-  },
-});
 
 const mapStore = useMap();
 const imageWrapper = ref(null);
 
-let localZoom = mapStore.zoom;
-let zoomDelta = 0;
-
-const syncZoom = throttle(() => (mapStore.zoom = localZoom), 500);
-
-const animateZoom = () => {
-  localZoom += zoomDelta;
-  localZoom = clamp(localZoom, props.minZoom, props.maxZoom);
-  imageWrapper.value.style.setProperty("--zoom", localZoom);
-};
+watch(
+  () => mapStore.zoom,
+  (zoom) => {
+    imageWrapper.value.style.setProperty("--zoom", zoom);
+  }
+);
 
 const handleWheelEvent = (wheelEvent) => {
-  zoomDelta = wheelEvent.wheelDelta * mapStore.zoomSpeed;
-  window.requestAnimationFrame(animateZoom);
-  syncZoom();
+  mapStore.zoomBy(wheelEvent.wheelDelta * mapStore.zoomSpeed);
 };
 
 const { pressed } = usePointer();
@@ -66,8 +47,8 @@ watch(
 const handleMoveEvent = (pointerMoveEvent) => {
   // Check if the main mouse button is pressed
   if (pressed.value === 0) {
-    position.value.x += pointerMoveEvent.movementX / localZoom;
-    position.value.y += pointerMoveEvent.movementY / localZoom;
+    position.value.x += pointerMoveEvent.movementX / mapStore.zoom;
+    position.value.y += pointerMoveEvent.movementY / mapStore.zoom;
   }
 };
 </script>
