@@ -7,9 +7,7 @@
     @wheel="handleWheelEvent"
     :style="{ cursor: cursorStyle }"
   >
-    <div class="ZoomContainer">
-      <img class="MapImage" :src="mapStore.mapURI" alt="" ref="mapImage" />
-    </div>
+    <img class="MapImage" :src="mapStore.mapURI" alt="" ref="imageWrapper" />
   </div>
   <MapOverlay />
 </template>
@@ -35,7 +33,7 @@ const props = defineProps({
 });
 
 const mapStore = useMap();
-const mapImage = ref(null);
+const imageWrapper = ref(null);
 
 let localZoom = mapStore.zoom;
 let zoomDelta = 0;
@@ -45,7 +43,7 @@ const syncZoom = throttle(() => (mapStore.zoom = localZoom), 500);
 const animateZoom = () => {
   localZoom += zoomDelta;
   localZoom = clamp(localZoom, props.minZoom, props.maxZoom);
-  mapImage.value.style.setProperty("--zoom", localZoom);
+  imageWrapper.value.style.setProperty("--zoom", localZoom);
 };
 
 const handleWheelEvent = (wheelEvent) => {
@@ -61,7 +59,7 @@ const position = ref({ x: 0, y: 0 });
 watch(
   () => `${position.value.x}px, ${position.value.y}px`,
   (newPosition) => {
-    mapImage.value.style.setProperty("--position", newPosition);
+    imageWrapper.value.style.setProperty("--position", newPosition);
   }
 );
 
@@ -80,24 +78,18 @@ const handleMoveEvent = (pointerMoveEvent) => {
   min-height: inherit;
   min-width: inherit;
   overflow: hidden;
-}
-
-.ZoomContainer {
-  display: flex;
-  min-height: inherit;
-  min-width: inherit;
   transform-origin: center center;
 }
 
-.ZoomContainer > .MapImage {
+.MapContainer > .MapImage {
   --zoom: 1;
   --position: 0px, 0px;
 
   height: 100%;
   width: auto;
+  margin: auto;
   transform-origin: center center;
   transform: scale(var(--zoom)) translate(var(--position));
-  transition: scale 100ms;
-  margin: auto;
+  /* transition: scale 100ms; */
 }
 </style>
