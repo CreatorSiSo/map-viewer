@@ -7,9 +7,11 @@
     @wheel="handleWheelEvent"
     :style="{ cursor: cursorStyle }"
   >
-    <img class="MapImage" :src="mapStore.mapURI" alt="" ref="imageWrapper" />
+    <div class="ImageWrapper" ref="imageWrapper">
+      <img class="MapImage" :src="mapStore.mapURI" alt="" />
+    </div>
+    <MapOverlay />
   </div>
-  <MapOverlay />
 </template>
 
 <script setup>
@@ -25,6 +27,10 @@ const imageWrapper = ref(null);
 watch(
   () => mapStore.zoom,
   (zoom) => {
+    imageWrapper.value.style.setProperty(
+      "--transition-time",
+      `${mapStore.time}ms`
+    );
     imageWrapper.value.style.setProperty("--zoom", zoom);
   }
 );
@@ -56,21 +62,25 @@ const handleMoveEvent = (pointerMoveEvent) => {
 <style scoped>
 .MapContainer {
   display: flex;
-  min-height: inherit;
-  min-width: inherit;
   overflow: hidden;
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.MapContainer .ImageWrapper {
+  --zoom: 0.5;
+  --position: 0px, 0px;
+
+  transform: scale(var(--zoom));
   transform-origin: center center;
 }
 
-.MapContainer > .MapImage {
-  --zoom: 1;
-  --position: 0px, 0px;
-
-  height: 100%;
-  width: auto;
-  margin: auto;
-  transform-origin: center center;
-  transform: scale(var(--zoom)) translate(var(--position));
-  /* transition: scale 100ms; */
+.ImageWrapper .MapImage {
+  width: 100%;
+  max-width: 100%;
+  transform: translate(var(--position));
 }
 </style>

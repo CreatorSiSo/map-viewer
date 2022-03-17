@@ -4,18 +4,16 @@ import { clamp } from "../functions/math.js";
 export const useMap = defineStore("map", {
   state: () => {
     return {
-      zoom: 1,
-      minZoom: 0.6,
-      maxZoom: 6,
+      zoom: 0.5,
+      minZoom: 0.5,
+      maxZoom: 10,
       zoomSpeed: 0.0015,
-      mapURI: "/assets/MapAzura.png",
+      mapURI: "/assets/MapCombined.jpg",
     };
   },
   actions: {
     zoomBy(amount) {
-      const previouszoom = this.zoom;
       this.zoom = clamp(this.zoom + amount, this.minZoom, this.maxZoom);
-      console.log(this.zoom - previouszoom);
     },
     zoomTo(value) {
       this.zoom = clamp(value, this.minZoom, this.maxZoom);

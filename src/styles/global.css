@@ -1,8 +1,9 @@
+@import url("../../node_modules/normalize.css/normalize.css");
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-  margin: 0;
 }
 
 :root {
@@ -20,7 +21,6 @@
 }
 
 body {
-  padding: 0;
   width: 100vw;
   min-height: 100vh;
   background: #e6bb8c;
